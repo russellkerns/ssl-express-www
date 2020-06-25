@@ -7,6 +7,8 @@
     "dist": "./node_modules/.bin/browserify source/ForceSSL.js -s sslExpress -t [babelify] -p [bannerify --file .banner] -o dist/index.js",
     "lib": "./node_modules/.bin/babel source -d lib",
     "build": "rm -rf lib dist && yarn lib && yarn dist",
+    "create-changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "update-changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "test": "./node_modules/.bin/mocha specs/**/*.spec.js --require babel-register",
     "test-watch": "yarn test -- --watch || ECHO."
   },
@@ -53,6 +55,7 @@
     "bannerify": "^1.0.1",
     "browserify": "^15.2.0",
     "chai": "^4.1.2",
+    "conventional-changelog-cli": "^2.0.34",
     "eslint": "^4.15.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",

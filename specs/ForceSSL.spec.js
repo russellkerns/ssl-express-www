@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import ForceSSL from '../source/ForceSSL';
+import ForceSSL from '../source';
 
 describe('Package Express Force HTTPS', () => {
   it('Should do nothing when localhost is required', () => {
@@ -63,7 +63,7 @@ describe('Package Express Force HTTPS', () => {
     const req = {
       url: '/app/',
       headers: {
-        'x-forwarded-proto': 'https',
+        'x-forwarded-proto': 'http',
         host: 'example.com.br',
       },
     };
@@ -77,5 +77,30 @@ describe('Package Express Force HTTPS', () => {
     };
     ForceSSL(req, res, next);
     expect(res.redirect(next)).to.be.equal('https://example.com.br/app');
+  });
+
+  it('Should read options when set it in params', () => {
+    const req = {
+      url: '/app/',
+      headers: {
+        'x-forwarded-proto': 'http',
+        host: 'www.example.com.br',
+      },
+    };
+
+    const options = {
+      removeWww: false,
+      forceSsl: false,
+    };
+
+    let next = () => `${req.headers['x-forwarded-proto']}://${req.headers.host}${req.url}`;
+    const res = {
+      redirect(callback) {
+        next = callback;
+        return next;
+      },
+    };
+    ForceSSL(req, res, next, options);
+    expect(res.redirect(next)).to.be.equal('http://www.example.com.br/app');
   });
 });
